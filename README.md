@@ -2,6 +2,7 @@
 A Splunk Dashboard to track the weight of a new litter of pups. In this case, a litter of Newfound puppies from the Newfoundland Club of New England Rescue.
 
 ## History of The Newfoundland Club of New England Rescue
+<img style="float:right;" src="/static/ncne_logo.jpg">
 The Newfoundland Club of New England, Inc. is a non-profit corporation founded in 1969 with clear objectives intended to promote the Newfoundland Dog breed. NCNE has over 600 individual, family, and honorary members.
 
 NCNE is a regional club of the Newfoundland Club of America and offers its members a variety of activities each year from fun days to working events to supported entries at American Kennel Club dog shows and obedience trials. Members are encouraged to participate and help with the organization of these events. NCNE also publishes a bi-monthly newsletter for its membership.
