@@ -17,6 +17,7 @@ Ember and Ash were a pair of rescues from a bad backyard breeder who overbred Em
 
 ## Puppies!!!
 On January 15th, Ember's litter of 7 puppies was born and all look healthy initially, however their growth needs to be constantly monitored to make sure they are putting on weight and growing into the healthy puppies they should be. We were chosen as one of the families to adopt one of the puppies and I couldn't be happier to add another giant, fluffy, slobbery pup to our home.
+
 <img width="30%" src="static/pup_pics1.png"><img width="30%" src="static/pup_pics2.jpg">
 
 ## Yes, you can Splunk puppies!
