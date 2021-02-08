@@ -1,0 +1,149 @@
+<form>
+  <label>Puppy Tracking</label>
+  <fieldset submitButton="false">
+    <input type="radio" token="measurement">
+      <label>Weight Measurement</label>
+      <choice value="1">Ounces</choice>
+      <choice value="0.0625">Pounds</choice>
+      <default>1</default>
+      <initialValue>1</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel depends="$alwaysHideCSS$">
+      <title>Single value</title>
+      <html>
+     <style>
+       #weightchart{
+         width:75% !important;
+       }
+       #puppyweights{
+         width:25% !important;
+       }
+     </style>
+   </html>
+    </panel>
+    <panel id="weightchart">
+      <chart>
+        <title>Daily Puppy Weights</title>
+        <search type="annotation">
+          <query>index="puppy_data" sourcetype=puppyeventcsv | eval annotation_label = event</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <search>
+          <query>index="puppy_data" | eval weight=weight*$measurement$ | timechart span=1d max(weight) by name | sort name,_time</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <!-- Secondary search that drives the annotations -->
+        <option name="charting.axisTitleY.text">Weight</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.seriesColors">[0x49BE57, 0x000000, 0xFF009B, 0xE8FF00, 0x008FFF, 0xFF9B00, 0xFF0000]</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel id="puppyweights">
+      <table>
+        <title>Latest Weight</title>
+        <search>
+          <query>index=puppy_data sourcetype=puppycsv | eval weight=weight*$measurement$ | stats latest(weight) as "Latest Weight" by name | sort - "Latest Weight"</query>
+          <earliest>-30d@d</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Daily Weight Change Rate</title>
+        <search>
+          <query>index="puppy_data" | sort name,_time | streamstats range(weight) as weight_delta by name window=2 current=true reset_on_change=true | eval percent_change=(weight_delta/weight)*100 | timechart max(percent_change) by name span=1d | sort name,_time</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleY.text">Daily Change Percent</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.seriesColors">[0x49BE57, 0x000000, 0xFF009B, 0xE8FF00, 0x008FFF, 0xFF9B00, 0xFF0000]</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Total Weight Change</title>
+        <search>
+          <query>index="puppy_data" | sort name,_time | streamstats range(weight) as weight_delta by name current=true reset_on_change=true | eval percent_change=(weight_delta/weight)*100 | timechart max(percent_change) by name span=1d | sort name,_time</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleY.text">Total Change Percent</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.seriesColors">[0x49BE57, 0x000000, 0xFF009B, 0xE8FF00, 0x008FFF, 0xFF9B00, 0xFF0000]</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Weight Ranking</title>
+        <search>
+          <query>index="puppy_data"  sourcetype=puppycsv | sort _time, weight | streamstats count as countval by date current=true reset_on_change=true  | timechart  max(countval) by name</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisLabelsY.majorUnit">.5</option>
+        <option name="charting.axisTitleY.text">Size Rank (1 Being the smallest)</option>
+        <option name="charting.axisY.maximumNumber">7</option>
+        <option name="charting.axisY.minimumNumber">0</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">bottom</option>
+        <option name="charting.seriesColors">[0x49BE57, 0x000000, 0xFF009B, 0xE8FF00, 0x008FFF, 0xFF9B00, 0xFF0000]</option>
+        <option name="height">292</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Group Weight</title>
+        <search>
+          <query>index="puppy_data" | eval weight=weight*$measurement$ | timechart span=1d avg(weight) as "Avg" max(weight) as "Max" min(weight) as "Min"</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Mean Day To Day Growth Rate</title>
+        <search>
+          <query>index="puppy_data" | sort name,_time | streamstats range(weight) as weight_delta by name window=2 current=true reset_on_change=true | eval percent_change=(weight_delta/weight)*100 | timechart mean(percent_change) span=1d</query>
+          <earliest>1610668800</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">none</option>
+      </chart>
+    </panel>
+  </row>
+</form>
